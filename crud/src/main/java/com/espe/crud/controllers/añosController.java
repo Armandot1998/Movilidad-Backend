@@ -137,6 +137,35 @@ public class añosController {
 		return jdbcTemplate.query(q, new BeanPropertyRowMapper<>(SolicitudMovilidadVo.class));
 	}
 	
+	
+	
+	
+	@GetMapping("/requisitoAños/{id}")
+	public List<ReqplanmVo> requisitosAños(@PathVariable Long id) throws SQLException{
+		String q = "INSERT INTO utic.uzmtverireq( uzmtreqplanm_id, PEAEMPL_PIDM,uzmtverireq_estado)\n" + 
+				"( SELECT 3,PEBEMPL_PIDM,1  FROM PEBEMPL WHERE  PEBEMPL_PIDM ="+id+" AND PEBEMPL_BCAT_CODE = 'DO' AND \n" + 
+				"(SELECT TRUNC((( SYSDATE - PEBEMPL_FIRST_HIRE_DATE )/365),0) FROM PEBEMPL WHERE PEBEMPL_PIDM ="+id+" AND PEBEMPL_BCAT_CODE = 'DO') > 3)";
+	System.out.println(q);
+		return (List<ReqplanmVo>) jdbcTemplate.query(q, new BeanPropertyRowMapper<>(ReqplanmVo.class));
+	}
+	
+	
+	
+	@GetMapping("/requisitoAños2/{id}")
+	public List<ReqplanmVo> requisitoAños2(@PathVariable Long id) throws SQLException{
+		String q = "insert into utic.uzmtverireq(uzmtreqplanm_id, PEAEMPL_PIDM, uzmtverireq_estado)\r\n" + 
+				"select 3,"+ id +",0 from dual where not exists (select uzmtreqplanm_id, PEAEMPL_PIDM, uzmtverireq_estado from utic.uzmtverireq where\r\n" + 
+				"(uzmtverireq_estado= 1 and uzmtreqplanm_id= 3 and peaempl_pidm= "+ id +"))";
+	System.out.println(q);
+		return (List<ReqplanmVo>) jdbcTemplate.query(q, new BeanPropertyRowMapper<>(ReqplanmVo.class));
+	}
+
+	
+	
+	
+	
+	
+	
 	@GetMapping("/requisito/{id}")
 	public List<ReqplanmVo> requisito(@PathVariable Long id) throws SQLException{
 		String q = "insert\r\n" + 
@@ -344,6 +373,8 @@ public class añosController {
 	System.out.println(q);
 		return (List<ReqplanmVo>) jdbcTemplate.query(q, new BeanPropertyRowMapper<>(ReqplanmVo.class));
 	}
+	
+	
 	@GetMapping("/req4/{id}")
 	public List<ReqplanmVo> requisito4(@PathVariable Long id) throws SQLException{
 		String q = "insert into utic.uzmtverireq(uzmtverireq_id, uzmtreqplanm_id, PEAEMPL_PIDM, uzmtverireq_estado)\r\n" + 
@@ -352,6 +383,8 @@ public class añosController {
 	System.out.println(q);
 		return (List<ReqplanmVo>) jdbcTemplate.query(q, new BeanPropertyRowMapper<>(ReqplanmVo.class));
 	}
+	
+	
 	
 	@GetMapping("/sm/{id}")
 	public List<ReqplanmVo> smovilidad(@PathVariable Long id) throws SQLException{
