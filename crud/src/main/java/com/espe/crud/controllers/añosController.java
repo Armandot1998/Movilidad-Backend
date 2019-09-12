@@ -37,7 +37,7 @@ public class añosController {
 	
 	@GetMapping("/años/{id}")
 	public List<Años> findbyPIDM(@PathVariable Long id) throws SQLException{
-		String q = "select  DISTINCT(uzmtrequisito_detalle) as nombre, uzmtverireq_estado, uzmtverireq_id from utic.uzmtverireq,utic.uzmtrequisito,utic.uzmtreqplanm where utic.uzmtverireq.uzmtreqplanm_id= utic.uzmtreqplanm.uzmtreqplanm_id and utic.uzmtrequisito.uzmtrequisito_id= utic.uzmtreqplanm.uzmtrequisito_id and peaempl_pidm="+id+"  and rownum < 2 order by uzmtverireq_id";
+		String q = "SELECT TRUNC((( SYSDATE - PEBEMPL_FIRST_HIRE_DATE )/365),0) AS TOTAL FROM PEBEMPL WHERE PEBEMPL_PIDM = " + id +" AND PEBEMPL_BCAT_CODE = 'DO'";
 	System.out.println(q);
 		return jdbcTemplate.query(q, new BeanPropertyRowMapper<>(Años.class));
 	}
@@ -102,7 +102,7 @@ public class añosController {
 	
 	@GetMapping("/nuevo/{id}")
 	public List<verificacionvo> find(@PathVariable Long id) throws SQLException{
-		String q = "select  DISTINCT(uzmtrequisito_detalle) as nombre, uzmtverireq_estado, uzmtverireq_id from utic.uzmtverireq,utic.uzmtrequisito,utic.uzmtreqplanm where utic.uzmtverireq.uzmtreqplanm_id= utic.uzmtreqplanm.uzmtreqplanm_id and utic.uzmtrequisito.uzmtrequisito_id= utic.uzmtreqplanm.uzmtrequisito_id and peaempl_pidm="+id+" order by uzmtverireq_id";
+		String q = "select  DISTINCT(uzmtrequisito_detalle) as nombre, uzmtverireq_estado, uzmtverireq_id from utic.uzmtverireq,utic.uzmtrequisito,utic.uzmtreqplanm where utic.uzmtverireq.uzmtreqplanm_id= utic.uzmtreqplanm.uzmtreqplanm_id and utic.uzmtrequisito.uzmtrequisito_id= utic.uzmtreqplanm.uzmtrequisito_id and peaempl_pidm="+id+"  and rownum < 2 order by uzmtverireq_id ";
 	System.out.println(q);
 		return jdbcTemplate.query(q, new BeanPropertyRowMapper<>(verificacionvo.class));
 	}
