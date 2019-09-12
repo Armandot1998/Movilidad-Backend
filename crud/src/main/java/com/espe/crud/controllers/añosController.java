@@ -37,7 +37,7 @@ public class añosController {
 	
 	@GetMapping("/años/{id}")
 	public List<Años> findbyPIDM(@PathVariable Long id) throws SQLException{
-		String q = "select  DISTINCT(uzmtrequisito_detalle) as nombre, uzmtverireq_estado, uzmtverireq_id from utic.uzmtverireq,utic.uzmtrequisito,utic.uzmtreqplanm where utic.uzmtverireq.uzmtreqplanm_id= utic.uzmtreqplanm.uzmtreqplanm_id and utic.uzmtrequisito.uzmtrequisito_id= utic.uzmtreqplanm.uzmtrequisito_id and peaempl_pidm="+id+"  and rownum < 2 order by uzmtverireq_id ";
+		String q = "select  DISTINCT(uzmtrequisito_detalle) as nombre, uzmtverireq_estado, uzmtverireq_id from utic.uzmtverireq,utic.uzmtrequisito,utic.uzmtreqplanm where utic.uzmtverireq.uzmtreqplanm_id= utic.uzmtreqplanm.uzmtreqplanm_id and utic.uzmtrequisito.uzmtrequisito_id= utic.uzmtreqplanm.uzmtrequisito_id and peaempl_pidm="+id+"  and rownum < 2 order by uzmtverireq_id";
 	System.out.println(q);
 		return jdbcTemplate.query(q, new BeanPropertyRowMapper<>(Años.class));
 	}
