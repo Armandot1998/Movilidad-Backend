@@ -423,13 +423,38 @@ public class añosController {
 		return (List<ReqplanmVo>) jdbcTemplate.query(q, new BeanPropertyRowMapper<>(ReqplanmVo.class));
 	}
 	
-	@GetMapping("/reset")
-	public List<PMovilidad> findPM1() throws SQLException{
-		String q = "delete from utic.uzmtverireq ";
+
+	@GetMapping("/Escalafonado2/{id}")
+	public List<ReqplanmVo> requisitoe(@PathVariable Long id) throws SQLException{
+		String q = "INSERT INTO utic.uzmtverireq( uzmtreqplanm_id, PEAEMPL_PIDM, UZMTVERIREQ_ESTADO)\r\n" + 
+				"( SELECT 1,PEBEMPL_PIDM, 1   FROM PEBEMPL WHERE  PEBEMPL_PIDM ="+ id +" AND PEBEMPL_BCAT_CODE = 'DO' AND \r\n" + 
+				"(SELECT DISTINCT (select max(ptrtenr_desc)  from PTRTENR where ptrtenr_code= PERAPPT_TENURE_CODE ) as CATEGORIA_ESCALAFON FROM PEBEMPL , PERAPPT WHERE pebempl_PIDM = PERAPPT.PERAPPT_PIDM\r\n" + 
+				"AND pebempl_empl_status = 'A' AND (pebempl_bcat_code = 'DO' ) AND pebempl_PIDM ="+ id +" AND (pebempl_bcat_code = 'DO' or pebempl_bcat_code = 'SP' ) AND\r\n" + 
+				"pebempl_empl_status = (SELECT MAX(NBRJOBS_STATUS) FROM NBRJOBS where NBRJOBS_pidm = pebempl_PIDM  AND (nbrjobs_pict_code = 'ED' or nbrjobs_pict_code = 'LD' )  AND nbrjobs_effective_date = (SELECT MAX(nbrjobs_effective_date) \r\n" + 
+				"FROM NBRJOBS where NBRJOBS_pidm = pebempl_PIDM AND   (nbrjobs_pict_code = 'ED' or nbrjobs_pict_code = 'LD' ))) AND PERAPPT_APPT_EFF_DATE = (select MAX(PERAPPT_APPT_EFF_DATE)  from PERAPPT WHERE PERAPPT_PIDM = "+ id +" )\r\n" + 
+				") NOT LIKE 'TITULAR%' )";
 	System.out.println(q);
-		return jdbcTemplate.query(q, new BeanPropertyRowMapper<>(PMovilidad.class));
+		return (List<ReqplanmVo>) jdbcTemplate.query(q, new BeanPropertyRowMapper<>(ReqplanmVo.class));
 	}
 	
+	@GetMapping("/GetRequisito1/{id}")
+	public List<ReqplanmVo> requisitoc(@PathVariable Long id) throws SQLException{
+		String q = "select  DISTINCT(uzmtrequisito_detalle) as nombre, uzmtverireq_estado, uzmtverireq_id \r\n" + 
+				"from utic.uzmtverireq,utic.uzmtrequisito,utic.uzmtreqplanm where utic.uzmtverireq.uzmtreqplanm_id= utic.uzmtreqplanm.uzmtreqplanm_id \r\n" + 
+				"and utic.uzmtrequisito.uzmtrequisito_id= utic.uzmtreqplanm.uzmtrequisito_id \r\n" + 
+				"and peaempl_pidm=" +id+ " and utic.uzmtverireq.uzmtreqplanm_id = 1 and rownum < 2 order by uzmtverireq_id";
+	System.out.println(q);
+		return (List<ReqplanmVo>) jdbcTemplate.query(q, new BeanPropertyRowMapper<>(ReqplanmVo.class));
+	}
 	
+	@GetMapping("/GetRequisito3/{id}")
+	public List<ReqplanmVo> requisitod(@PathVariable Long id) throws SQLException{
+		String q = "select  DISTINCT(uzmtrequisito_detalle) as nombre, uzmtverireq_estado, uzmtverireq_id \r\n" + 
+				"from utic.uzmtverireq,utic.uzmtrequisito,utic.uzmtreqplanm where utic.uzmtverireq.uzmtreqplanm_id= utic.uzmtreqplanm.uzmtreqplanm_id \r\n" + 
+				"and utic.uzmtrequisito.uzmtrequisito_id= utic.uzmtreqplanm.uzmtrequisito_id \r\n" + 
+				"and peaempl_pidm=" +id+ " and utic.uzmtverireq.uzmtreqplanm_id = 3 and rownum < 2 order by uzmtverireq_id";
+	System.out.println(q);
+		return (List<ReqplanmVo>) jdbcTemplate.query(q, new BeanPropertyRowMapper<>(ReqplanmVo.class));
+	}
 	
 }
