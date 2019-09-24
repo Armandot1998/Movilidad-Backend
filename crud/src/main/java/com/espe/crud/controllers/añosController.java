@@ -416,7 +416,6 @@ public class añosController {
 		return (List<ReqplanmVo>) jdbcTemplate.query(q, new BeanPropertyRowMapper<>(ReqplanmVo.class));
 	}
 	
-	
 	@GetMapping("/Escalafonado/{id}")
 	public List<ReqplanmVo> requisito1a(@PathVariable Long id) throws SQLException{
 		String q = "INSERT INTO utic.uzmtverireq( uzmtreqplanm_id, PEAEMPL_PIDM, UZMTVERIREQ_ESTADO)\r\n" + 
@@ -553,45 +552,48 @@ public class añosController {
 	
 	@GetMapping("/Requisito4/{id}")
 	public List<ReqplanmVo> requisitof(@PathVariable Long id) throws SQLException{
-		String q = "\r\n" + 
-				"INSERT WHEN \r\n" + 
+		String q ="INSERT WHEN \r\n" + 
 				"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" + 
-				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D04','S04') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") >= 2 OR\r\n" + 
+				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D04','S04') AND  PPRCCMT.PPRCCMT_PIDM = " +id+ " ) > = 2 OR\r\n" + 
 				"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" + 
-				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D05','S05') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") >= 1 OR\r\n" + 
+				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D05','S05') AND  PPRCCMT.PPRCCMT_PIDM = " +id+ ") > = 1 OR\r\n" + 
 				"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" + 
-				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D06','S06') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") >= 1 OR\r\n" + 
+				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D06','S06') AND  PPRCCMT.PPRCCMT_PIDM = " +id+ ") > = 1 OR\r\n" + 
 				"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" + 
-				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D08') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") >= 1 OR\r\n" + 
+				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D07') AND  PPRCCMT.PPRCCMT_PIDM = " +id+ ") > = 2 OR\r\n" + 
 				"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" + 
-				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D09') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") >= 1 OR\r\n" + 
+				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D08') AND  PPRCCMT.PPRCCMT_PIDM = " +id+ ") > = 1 OR\r\n" + 
 				"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" + 
-				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D010') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") >= 1 OR\r\n" + 
+				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D09') AND  PPRCCMT.PPRCCMT_PIDM = " +id+ ") > = 1 OR\r\n" + 
 				"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" + 
-				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D011') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") >= 1 OR\r\n" + 
+				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D010') AND  PPRCCMT.PPRCCMT_PIDM = " +id+ ") > = 1 OR\r\n" + 
 				"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" + 
-				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D012') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") >= 1\r\n" + 
+				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D011') AND  PPRCCMT.PPRCCMT_PIDM = " +id+ ") > = 1 OR\r\n" + 
+				"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" + 
+				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D012') AND  PPRCCMT.PPRCCMT_PIDM = " +id+ ") > = 1\r\n" + 
 				"THEN\r\n" + 
-				"into utic.uzmtverireq ( uzmtreqplanm_id, PEAEMPL_PIDM, utic.uzmtverireq.uzmtverireq_estado) VALUES (4, "+ id +", 0)\r\n" + 
+				"into utic.uzmtverireq ( uzmtreqplanm_id, PEAEMPL_PIDM, utic.uzmtverireq.uzmtverireq_estado) VALUES (4, " +id+ ", 0)\r\n" + 
 				" WHEN \r\n" + 
 				"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" + 
-				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D04','S04') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") < 2 AND\r\n" + 
+				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D04','S04') AND  PPRCCMT.PPRCCMT_PIDM = " +id+ ") < 2 AND\r\n" + 
 				"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" + 
-				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D05','S05') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") < 2 AND\r\n" + 
+				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D05','S05') AND  PPRCCMT.PPRCCMT_PIDM = " +id+ ") < 1 AND\r\n" + 
 				"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" + 
-				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D06','S06') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") < 2 AND\r\n" + 
+				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D06','S06') AND  PPRCCMT.PPRCCMT_PIDM = " +id+ ") < 1 AND\r\n" + 
 				"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" + 
-				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D08') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") < 2  AND\r\n" + 
+				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D07') AND  PPRCCMT.PPRCCMT_PIDM = " +id+ ") < 2  AND\r\n" + 
 				"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" + 
-				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D09') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") < 2 AND\r\n" + 
+				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D08') AND  PPRCCMT.PPRCCMT_PIDM = " +id+ ") < 2  AND\r\n" + 
 				"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" + 
-				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D010') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") < 2 AND\r\n" + 
+				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D09') AND  PPRCCMT.PPRCCMT_PIDM = " +id+ ") < 1 AND\r\n" + 
 				"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" + 
-				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D011') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") < 2 AND\r\n" + 
+				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D010') AND  PPRCCMT.PPRCCMT_PIDM = " +id+ ") < 1 AND\r\n" + 
 				"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" + 
-				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D012') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") < 2\r\n" + 
+				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D011') AND  PPRCCMT.PPRCCMT_PIDM = " +id+ ") < 1 AND\r\n" + 
+				"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" + 
+				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D012') AND  PPRCCMT.PPRCCMT_PIDM = " +id+ ") < 1\r\n" + 
 				"THEN\r\n" + 
-				"into utic.uzmtverireq ( uzmtreqplanm_id, PEAEMPL_PIDM, utic.uzmtverireq.uzmtverireq_estado) VALUES (4, "+ id +", 1)\r\n" + 
+				"into utic.uzmtverireq ( uzmtreqplanm_id, PEAEMPL_PIDM, utic.uzmtverireq.uzmtverireq_estado) VALUES (4, " +id+ ", 1)\r\n" + 
 				"SELECT * FROM DUAL";
 	System.out.println(q);
 		return (List<ReqplanmVo>) jdbcTemplate.query(q, new BeanPropertyRowMapper<>(ReqplanmVo.class));
