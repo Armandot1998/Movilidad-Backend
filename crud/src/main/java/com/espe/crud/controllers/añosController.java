@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.espe.crud.model.Años;
+import com.espe.crud.model.Detalles;
 import com.espe.crud.model.Sanciones;
 import com.espe.crud.model.Escalafonados;
 import com.espe.crud.model.tipomovilidad;
@@ -548,6 +549,15 @@ public class añosController {
 		String q ="select * from PPRCCMT where pprccmt_pidm = " +id+ "";
 	System.out.println(q);
 	return (List<Sanciones>) jdbcTemplate.query(q, new BeanPropertyRowMapper<>(Sanciones.class));
+	}
+	
+
+	@GetMapping("/Detalles/{id}")
+	public List<Detalles> Detalles(@PathVariable Long id) throws SQLException{
+		String q ="SELECT TRUNC((( SYSDATE - PEBEMPL_FIRST_HIRE_DATE )/365),0) AS TOTAL, PEBEMPL_FIRST_HIRE_DATE AS FECHA_INICIO \r\n" + 
+				"FROM PEBEMPL WHERE PEBEMPL_PIDM = " +id+ " AND PEBEMPL_BCAT_CODE = 'DO'";
+	System.out.println(q);
+	return (List<Detalles>) jdbcTemplate.query(q, new BeanPropertyRowMapper<>(Detalles.class));
 	}
 	
 	@GetMapping("/Requisito4/{id}")
