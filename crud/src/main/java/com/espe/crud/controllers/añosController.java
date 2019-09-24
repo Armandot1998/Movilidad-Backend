@@ -554,8 +554,15 @@ public class añosController {
 
 	@GetMapping("/Detalles/{id}")
 	public List<Detalles> Detalles(@PathVariable Long id) throws SQLException{
-		String q ="SELECT TRUNC((( SYSDATE - PEBEMPL_FIRST_HIRE_DATE )/365),0) AS TOTAL, PEBEMPL_FIRST_HIRE_DATE AS FECHA_INICIO \r\n" + 
-				"FROM PEBEMPL WHERE PEBEMPL_PIDM = " +id+ " AND PEBEMPL_BCAT_CODE = 'DO'";
+		String q ="SELECT * from \r\n" + 
+				"(SELECT TRUNC((( SYSDATE - PEBEMPL_FIRST_HIRE_DATE )/365),0) AS TOTAL, PEBEMPL_FIRST_HIRE_DATE AS FECHA_INICIO \r\n" + 
+				"FROM PEBEMPL WHERE PEBEMPL_PIDM = " +id+ " AND PEBEMPL_BCAT_CODE = 'DO'),\r\n" + 
+				"(SELECT DISTINCT \r\n" + 
+				"(select max(ptrtenr_desc)  from PTRTENR where ptrtenr_code= PERAPPT_TENURE_CODE ) as CATEGORIA_ESCALAFON FROM PEBEMPL , PERAPPT WHERE pebempl_PIDM = PERAPPT.PERAPPT_PIDM\r\n" + 
+				"AND pebempl_empl_status = 'A' AND (pebempl_bcat_code = 'DO' ) AND pebempl_PIDM = " +id+ " AND (pebempl_bcat_code = 'DO' or pebempl_bcat_code = 'SP' ) AND\r\n" + 
+				"pebempl_empl_status = (SELECT MAX(NBRJOBS_STATUS) FROM NBRJOBS where NBRJOBS_pidm = pebempl_PIDM  AND (nbrjobs_pict_code = 'ED' or nbrjobs_pict_code = 'LD' )  AND nbrjobs_effective_date = (SELECT MAX(nbrjobs_effective_date) \r\n" + 
+				"FROM NBRJOBS where NBRJOBS_pidm = pebempl_PIDM AND   (nbrjobs_pict_code = 'ED' or nbrjobs_pict_code = 'LD' ))) AND PERAPPT_APPT_EFF_DATE = (select MAX(PERAPPT_APPT_EFF_DATE)  from PERAPPT WHERE PERAPPT_PIDM = " +id+ " ))\r\n" + 
+				"";
 	System.out.println(q);
 	return (List<Detalles>) jdbcTemplate.query(q, new BeanPropertyRowMapper<>(Detalles.class));
 	}
