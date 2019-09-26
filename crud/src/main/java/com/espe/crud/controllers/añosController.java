@@ -242,34 +242,41 @@ public class añosController {
 	
 	@GetMapping("/mostrarRequisitos/{id}")
 	public List<verificacionvo> find(@PathVariable Long id) throws SQLException{
-		String q = "\r\n" + 
-				"select  DISTINCT(uzmtrequisito_detalle) as nombre, uzmtverireq_estado, uzmtverireq_id, utic.uzmtreqplanm.uzmtreqplanm_id\r\n" + 
+		String q ="select  DISTINCT(uzmtrequisito_detalle) as nombre, uzmtverireq_estado, uzmtverireq_id, utic.uzmtreqplanm.uzmtreqplanm_id\r\n" + 
 				"from utic.uzmtverireq,utic.uzmtrequisito,utic.uzmtreqplanm where utic.uzmtverireq.uzmtreqplanm_id= utic.uzmtreqplanm.uzmtreqplanm_id \r\n" + 
 				"and utic.uzmtrequisito.uzmtrequisito_id= utic.uzmtreqplanm.uzmtrequisito_id \r\n" + 
-				"and peaempl_pidm ="+ id +" and utic.uzmtverireq.uzmtreqplanm_id = 1 and rownum = 1\r\n" + 
+				"and peaempl_pidm = " +id+ " and utic.uzmtverireq.uzmtreqplanm_id = 1 and rownum = 1\r\n" + 
+				"and uzmtverireq_id = (select uzmtverireq_id from utic.uzmtverireq where peaempl_pidm = " +id+ " and uzmtreqplanm_id = 1 \r\n" + 
+				"and uzmtverireq_id = (select max (UZMTVERIREQ_ID) from UZMTVERIREQ where peaempl_pidm = " +id+ " and uzmtreqplanm_id = 1))\r\n" + 
 				"\r\n" + 
 				"UNION\r\n" + 
 				"\r\n" + 
 				"select  DISTINCT(uzmtrequisito_detalle) as nombre, uzmtverireq_estado, uzmtverireq_id, utic.uzmtreqplanm.uzmtreqplanm_id\r\n" + 
 				"from utic.uzmtverireq,utic.uzmtrequisito,utic.uzmtreqplanm where utic.uzmtverireq.uzmtreqplanm_id= utic.uzmtreqplanm.uzmtreqplanm_id \r\n" + 
 				"and utic.uzmtrequisito.uzmtrequisito_id= utic.uzmtreqplanm.uzmtrequisito_id\r\n" + 
-				"and peaempl_pidm = "+ id +" and utic.uzmtverireq.uzmtreqplanm_id = 2 and rownum = 1\r\n" + 
+				"and peaempl_pidm = " +id+ " and utic.uzmtverireq.uzmtreqplanm_id = 2 and rownum = 1 \r\n" + 
+				"and uzmtverireq_id = (select uzmtverireq_id from utic.uzmtverireq where peaempl_pidm = " +id+ " and uzmtreqplanm_id = 2 \r\n" + 
+				"and uzmtverireq_id = (select max (UZMTVERIREQ_ID) from UZMTVERIREQ where peaempl_pidm = " +id+ " and uzmtreqplanm_id = 2))\r\n" + 
 				"\r\n" + 
 				"UNION\r\n" + 
 				"\r\n" + 
 				"select  DISTINCT(uzmtrequisito_detalle) as nombre, uzmtverireq_estado, uzmtverireq_id, utic.uzmtreqplanm.uzmtreqplanm_id\r\n" + 
 				"from utic.uzmtverireq,utic.uzmtrequisito,utic.uzmtreqplanm where utic.uzmtverireq.uzmtreqplanm_id= utic.uzmtreqplanm.uzmtreqplanm_id \r\n" + 
 				"and utic.uzmtrequisito.uzmtrequisito_id= utic.uzmtreqplanm.uzmtrequisito_id\r\n" + 
-				"and peaempl_pidm ="+ id +" and utic.uzmtverireq.uzmtreqplanm_id = 3 and rownum = 1\r\n" + 
+				"and peaempl_pidm = " +id+ " and utic.uzmtverireq.uzmtreqplanm_id = 3 and rownum = 1\r\n" + 
+				"and uzmtverireq_id = (select uzmtverireq_id from utic.uzmtverireq where peaempl_pidm = " +id+ " and uzmtreqplanm_id = 3 \r\n" + 
+				"and uzmtverireq_id = (select max (UZMTVERIREQ_ID) from UZMTVERIREQ where peaempl_pidm = " +id+ " and uzmtreqplanm_id = 3))\r\n" + 
 				"\r\n" + 
 				"UNION\r\n" + 
 				"\r\n" + 
 				"select  DISTINCT(uzmtrequisito_detalle) as nombre, uzmtverireq_estado, uzmtverireq_id, utic.uzmtreqplanm.uzmtreqplanm_id\r\n" + 
 				"from utic.uzmtverireq,utic.uzmtrequisito,utic.uzmtreqplanm where utic.uzmtverireq.uzmtreqplanm_id= utic.uzmtreqplanm.uzmtreqplanm_id \r\n" + 
 				"and utic.uzmtrequisito.uzmtrequisito_id= utic.uzmtreqplanm.uzmtrequisito_id\r\n" + 
-				"and peaempl_pidm ="+ id +" and utic.uzmtverireq.uzmtreqplanm_id = 4 and rownum = 1\r\n" + 
+				"and peaempl_pidm = " +id+ " and utic.uzmtverireq.uzmtreqplanm_id = 4 and rownum = 1\r\n" + 
+				"and uzmtverireq_id = (select uzmtverireq_id from utic.uzmtverireq where peaempl_pidm = " +id+ " and uzmtreqplanm_id = 4 \r\n" + 
+				"and uzmtverireq_id = (select max (UZMTVERIREQ_ID) from UZMTVERIREQ where peaempl_pidm = " +id+ " and uzmtreqplanm_id = 4))\r\n" + 
 				"\r\n" + 
-				"order by uzmtreqplanm_id";
+				"order by uzmtreqplanm_id asc";
 	System.out.println(q);
 		return jdbcTemplate.query(q, new BeanPropertyRowMapper<>(verificacionvo.class));
 	}
