@@ -55,5 +55,4 @@ public class Sanciones {
 		PTVCMTY_DESC = pTVCMTY_DESC;
 	}
 	
-
 }

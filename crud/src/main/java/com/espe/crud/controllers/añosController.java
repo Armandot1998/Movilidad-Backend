@@ -554,7 +554,7 @@ public class añosController {
 
 	@GetMapping("/Sanciones/{id}")
 	public List<Sanciones> Sanciones(@PathVariable Long id) throws SQLException{
-		String q ="select * from PPRCCMT where pprccmt_pidm = " +id+ "";
+		String q ="select * from PPRCCMT CROSS JOIN PTVCMTY where PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND  PPRCCMT.PPRCCMT_PIDM = " +id+ "";
 	System.out.println(q);
 	return (List<Sanciones>) jdbcTemplate.query(q, new BeanPropertyRowMapper<>(Sanciones.class));
 	}
