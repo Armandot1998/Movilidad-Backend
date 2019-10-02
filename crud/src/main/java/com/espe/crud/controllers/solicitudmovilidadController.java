@@ -58,7 +58,7 @@ public class solicitudmovilidadController {
 	    public solicitudmovilidad postSolicitudmovilidad(@RequestBody solicitudmovilidad smovilidad) {
 	    	solicitudmovilidad _solicitudmovilidad = repository.save(new solicitudmovilidad(smovilidad.getId(),
 	    			smovilidad.getId_verif_req(), smovilidad.getEstado(), smovilidad.getObser(), smovilidad.getFecha_solicitud(), 
-	    			smovilidad.getUsuario_crea(),smovilidad.getFecha_crea(), smovilidad.getUsuario_mod(),smovilidad.getFecha_mod()));
+	    			smovilidad.getUsuario_crea(),smovilidad.getFecha_crea(), smovilidad.getUsuario_mod(),smovilidad.getFecha_mod(), smovilidad.getPidm()));
 	     
 	    	return _solicitudmovilidad;
 	    }
@@ -81,7 +81,8 @@ public class solicitudmovilidadController {
 	    	  _solicitudmovilidad.setFecha_crea(solicitudmovilidad.getFecha_crea());
 	    	  _solicitudmovilidad.setUsuario_mod(solicitudmovilidad.getUsuario_mod());
 	    	  _solicitudmovilidad.setFecha_mod(solicitudmovilidad.getFecha_mod());
-	        
+	    	  _solicitudmovilidad.setPidm(solicitudmovilidad.getPidm());
+		        
 	        return new ResponseEntity<>(repository.save(_solicitudmovilidad), HttpStatus.OK);
 	      } else {
 	        return new ResponseEntity<>(HttpStatus.NOT_FOUND);

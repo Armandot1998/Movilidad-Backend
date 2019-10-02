@@ -4,14 +4,20 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 @Entity
 @Table(name = "UZMTCRONG", schema="UTIC")
 public class Cronograma {
 
-	
+ 
+
 		@Id
+		@GeneratedValue(strategy=GenerationType.AUTO, generator="UZMTCRONG_ID ")
+		@SequenceGenerator(name="UZMTCRONG_ID ", sequenceName="UZMTCRONG_ID ")
 		@Column(name = "UZMTCRONOG_ID")
 		private Long ide;
 		
