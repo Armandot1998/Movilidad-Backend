@@ -54,6 +54,21 @@ public class añosController {
 		return jdbcTemplate.query(q, new BeanPropertyRowMapper<>(PMovilidad.class));
 	}
 	
+	@GetMapping("/solictmov")
+	public List<PMovilidad> findPa() throws SQLException{
+		String q = "INSERT \r\n" + 
+				"WHEN \r\n" + 
+				"(select sum((SELECT COUNT(*) AS REQ FROM utic.uzmtverireq where peaempl_pidm = 8085 and uzmtreqplanm_id = 1 and uzmtverireq_estado = 1)+\r\n" + 
+				"(SELECT COUNT(*) AS REQ FROM utic.uzmtverireq where peaempl_pidm = 8085 and uzmtreqplanm_id = 2 and uzmtverireq_estado = 1) + \r\n" + 
+				"(SELECT COUNT(*) AS REQ FROM utic.uzmtverireq where peaempl_pidm = 8085 and uzmtreqplanm_id = 3  and uzmtverireq_estado = 1) +\r\n" + 
+				"(SELECT COUNT(*) AS REQ FROM utic.uzmtverireq where peaempl_pidm = 8085 and uzmtreqplanm_id = 4 and uzmtverireq_estado = 1 ))as total from dual)>=4\r\n" + 
+				"THEN\r\n" + 
+				"into utic.uzmtsolictmov ( utic.uzmtsolictmov.uzmtsolictmov_pidm, uzmtsolictmov_estado) VALUES ((select peaempl_pidm from utic.uzmtverireq where uzmtverireq_id = (select max(uzmtverireq_id) from utic.uzmtverireq)), 1)\r\n" + 
+				"select * from dual";
+	System.out.println(q);
+		return jdbcTemplate.query(q, new BeanPropertyRowMapper<>(PMovilidad.class));
+	}
+	
 	@GetMapping("/smovfind")
 	public List<SMovilidad> findS() throws SQLException{
 		String q = "SELECT UTIC.uzmtmovsubm.uzmtmovsubm_id,UTIC.uzmtmovsubm.uzmtmovsubm_nom,utic.uzmttipmov.uzmtipmov_nombre  FROM UTIC.uzmtmovsubm INNER JOIN \r\n" + 
