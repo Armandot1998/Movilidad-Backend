@@ -1,4 +1,4 @@
-package com.espe.crud.model;
+ package com.espe.crud.model;
 
 
 import java.util.Date;
