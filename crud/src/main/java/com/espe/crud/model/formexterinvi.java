@@ -1,11 +1,14 @@
- package com.espe.crud.model;
+package com.espe.crud.model;
 
 
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 
@@ -13,7 +16,9 @@ import javax.persistence.Table;
 @Table(name = "UZMTESTINTER", schema="UTIC")
 public class formexterinvi {
 
-	@Id
+	@Id	
+	@GeneratedValue(strategy=GenerationType.AUTO, generator="UZMTESTINTER_ID")
+	@SequenceGenerator(name="UZMTESTINTER_ID", sequenceName="UZMTESTINTER_ID")
 	@Column(name = "UZMTESTINTER_ID")
 	private Long id;
 	
@@ -79,7 +84,11 @@ public class formexterinvi {
 	
 	
 
+	public formexterinvi() {
 
+	}
+
+	
 	public formexterinvi(Long id, Long id_convenio, Long id_cronog, Long id_lugar, Long id_solitmov,
 			String antecedentes, String obj, Date fecha_ini, Date fecha_fin, String meta, String entreg,
 			String nom_cont, String telf_cont, String email_cont, String nom_doctora, String nom_tesis,
@@ -328,6 +337,7 @@ public class formexterinvi {
 				+ ", usuario_crea=" + usuario_crea + ", fecha_crea=" + fecha_crea + ", usuario_mod=" + usuario_mod
 				+ ", fecha_mod=" + fecha_mod + "]";
 	}
+
 
 	
 }

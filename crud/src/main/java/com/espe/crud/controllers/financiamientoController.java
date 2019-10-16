@@ -56,10 +56,10 @@ public class financiamientoController {
     
     @PostMapping(value = "/financiamiento/create")
     public financiamiento postFinanciamiento(@RequestBody financiamiento financiamiento) {
-      financiamiento _financiamiento = repository.save(new financiamiento( financiamiento.getIde(), financiamiento.getId_gestinv(),
+      financiamiento _financiamiento = repository.save(new financiamiento(financiamiento.getId_gestinv(),
       financiamiento.getId_fmovilidad(), financiamiento.getId_testint(), financiamiento.getId_externo(), financiamiento.getId_pasaje(), 
       financiamiento.getFinan_viatico(), financiamiento.getOtros(), financiamiento.getTotal(), financiamiento.getUsuario_crea(), 
-      financiamiento.getFecha_crea(), financiamiento.getUsuario_mod(), financiamiento.getFecha_mod()));
+      financiamiento.getFecha_crea(), financiamiento.getUsuario_mod(), financiamiento.getFecha_mod(),financiamiento.getAyuda(),financiamiento.getPidem()));
       return _financiamiento;
     }
     
@@ -85,7 +85,9 @@ public class financiamientoController {
         _financiamiento.setFecha_crea(financiamiento.getFecha_crea());
         _financiamiento.setUsuario_mod(financiamiento.getUsuario_mod());
         _financiamiento.setFecha_mod(financiamiento.getFecha_mod());
-       
+        _financiamiento.setAyuda(financiamiento.getAyuda());
+        _financiamiento.setPidem(financiamiento.getPidem());
+        
         
 
         return new ResponseEntity<>(repository.save(_financiamiento), HttpStatus.OK);
