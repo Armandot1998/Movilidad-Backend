@@ -17,6 +17,7 @@ import com.espe.crud.model.Años;
 import com.espe.crud.model.Detalles;
 import com.espe.crud.model.Sanciones;
 import com.espe.crud.model.Escalafonados;
+import com.espe.crud.model.InnerTotal;
 import com.espe.crud.model.tipomovilidad;
 import com.espe.crud.vo.PMovilidad;
 import com.espe.crud.vo.PlanMovilidadVo;
@@ -68,6 +69,7 @@ public class añosController {
 	System.out.println(q);
 		return jdbcTemplate.query(q, new BeanPropertyRowMapper<>(PMovilidad.class));
 	}
+	
 	
 	@GetMapping("/smovfind")
 	public List<SMovilidad> findS() throws SQLException{
@@ -383,7 +385,7 @@ public class añosController {
 	 String q = "update\r\n" +
 	 "uzmtfinan\r\n" +
 	 "set \r\n" +
-	 "uzmtfinan_total = (select sum(uzmtfinan_pasaje + uzmtfinan_viatico + uzmtfinan_otros) as total from utic.uzmtfinan \r\n" +
+	 "uzmtfinan_total = (select sum(uzmtfinan_pasaje + uzmtfinan_ayuda + uzmtfinan_otros) as total from utic.uzmtfinan \r\n" +
 	 "where uzmtfinan_id = (select max(uzmtfinan_id) from utic.uzmtfinan))\r\n" +
 	 "where\r\n" +
 	 "uzmtfinan_id = (select max(uzmtfinan_id) from utic.uzmtfinan)";
@@ -479,6 +481,20 @@ public class añosController {
 		return (List<ReqmovsubmVo>) jdbcTemplate.query(q, new BeanPropertyRowMapper<>(ReqmovsubmVo.class));
 	}
 	
+	
+	@GetMapping("/InnerTotal/{id}")
+	public List<InnerTotal> findbyPIDm(@PathVariable Long id) throws SQLException{
+	String q = "select uzmtestinter_antec as Antecendentes, uzmtestinter_obj as Objetivo, uzmtestinter_fech_inic as Fecha_ini, \r\n" +
+	"uzmtestinter_fech_fin as Fecha_fin, uzmtestinter_meta as Metas, uzmtestinter_nom_cont as Nombre_contac, \r\n" +
+	"uzmtestinter_telf_cont as Telf_contac, uzmtestinter_email_cont as Email_contac, uzmtestinter_nom_doctora as Nom_doctorado, \r\n" +
+	"uzmtestinter_nom_tesis as Nom_tesis, uzmtestinter_num_apro_doct as Num_Aprov, uzmtcrong_lugar as Lugar, \r\n" +
+	"uzmtcrong_activ as Actividades, uzmtcrong_fecha as Fecha, uzmtfinan_pasaje as Pasajes, \r\n" +
+	"uzmtfinan_otros as Otros, uzmtfinan_total as Total, uzmtfinan_ayuda as Ayuda \r\n" +
+	"from utic.uzmtestinter cross join utic.uzmtcrong cross join utic.uzmtfinan\r\n" +
+	"where uzmtestinter_pidm = " + id + " and uzmtpidm = " + id + " and uzmtfinan_pidm = " + id + "";
+	System.out.println(q);
+	return jdbcTemplate.query(q, new BeanPropertyRowMapper<>(InnerTotal.class));
+	}
 	@GetMapping("/reqmov1/{id}")
 	public List<ReqmovsubmVo> requisitomov(@PathVariable Long id) throws SQLException{
 		String q = "insert into utic.uzmtverireq(uzmtverireq_id, uzmtreqmovsubm_id, PEAEMPL_PIDM, uzmtverireq_estado)\r\n" + 
