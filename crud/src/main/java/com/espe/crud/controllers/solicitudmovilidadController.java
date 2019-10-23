@@ -33,7 +33,7 @@ public class solicitudmovilidadController {
 	  
 	//**MUESTRA TODAS LAS SOLICITUDES DE MOVILIDAD EXISTENTES EN LA BASE DE DADTOS**
 	    
-	    @GetMapping("//smovilidad")
+	    @GetMapping("/smovilidad")
 	    public List<solicitudmovilidad> getAllSolicitudmovilidad() {
 	      System.out.println("Get all solicitud de movilidad ...");
 	   

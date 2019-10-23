@@ -36,7 +36,7 @@ public class externoController {
 	    @Autowired
 	    externoRepository repository;
 	    
-	    //**MUÉSTRA TODAS LOS D.EXTERNOS EXISTENTES EN LA BASE DE DADTOS**
+	    //**MUÃ‰STRA TODAS LOS D.EXTERNOS EXISTENTES EN LA BASE DE DADTOS**
 	    
 	    @GetMapping("/externos")
 	    public List<externo> getAllExternons() {
@@ -48,7 +48,7 @@ public class externoController {
 	      return externo;
 	    }
 	    
-	    //**MUÉSTRA UN D.EXTERNO ESPECÍFICO 
+	    //**MUÃ‰STRA UN D.EXTERNO ESPECÃ�FICO 
 	    
 	    @GetMapping(value = "externo/{id}")
 	    public List<externo> findById(@PathVariable int id) {
@@ -65,7 +65,7 @@ public class externoController {
 	      externo.getSolicitmov(), externo.getGrup_inv(), externo.getLinea_inv(), externo.getBenef(), externo.getFech_inic(), 
 	      externo.getFech_fin(), externo.getObj(), externo.getMetodo(), externo.getMeta(), externo.getEntreg(), 
 	      externo.getCode(), externo.getPdm(), externo.getUsuario_crea(), externo.getFecha_crea(),
-	      externo.getUsuario_mod(), externo.getFecha_mod()));
+	      externo.getUsuario_mod(), externo.getFecha_mod(), externo.getPidem()));
 	      return _externo;
 	    }
 	    

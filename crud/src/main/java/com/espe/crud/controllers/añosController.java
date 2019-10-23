@@ -95,6 +95,64 @@ public class añosController {
 	System.out.println(q);
 		return jdbcTemplate.query(q, new BeanPropertyRowMapper<>(SMovilidad.class));
 	}
+	
+	
+	
+	
+	@GetMapping("/updatepart1")
+	public List<PMovilidad> findPMs() throws SQLException{
+		String q = "update\r\n" + 
+				"uzmtestinter\r\n" + 
+				"set \r\n" + 
+				"uzmtestinter_pidm = (select uzmtsolictmov_pidm from utic.uzmtsolictmov where uzmtsolictmov_id = (select max(uzmtsolictmov_id) from utic.uzmtsolictmov))\r\n" + 
+				"where\r\n" + 
+				"uzmtestinter_id = (select max(uzmtestinter_id) from utic.uzmtestinter)\r\n" + 
+				"";
+	System.out.println(q);
+		return jdbcTemplate.query(q, new BeanPropertyRowMapper<>(PMovilidad.class));
+	}
+	
+
+	
+	
+	@GetMapping("/updatepart2")
+	public List<PMovilidad> findPMx() throws SQLException{
+	String q = "update\r\n" +
+	"uzmtcrong\r\n" +
+	"set \r\n" +
+	"uzmtpidm = (select uzmtsolictmov_pidm from utic.uzmtsolictmov where uzmtsolictmov_id = (select max(uzmtsolictmov_id) from utic.uzmtsolictmov))\r\n" +
+	"where\r\n" +
+	"uzmtcronog_id = (select max(uzmtcronog_id) from utic.uzmtcrong)";
+	System.out.println(q);
+	return jdbcTemplate.query(q, new BeanPropertyRowMapper<>(PMovilidad.class));
+	}
+
+
+	 @GetMapping("/updatepart3")
+	 public List<PMovilidad> findPMz() throws SQLException{
+	 String q = "update\r\n" +
+	 "uzmtfinan\r\n" +
+	 "set \r\n" +
+	 "uzmtfinan_pidm = (select uzmtsolictmov_pidm from utic.uzmtsolictmov where uzmtsolictmov_id = (select max(uzmtsolictmov_id) from utic.uzmtsolictmov))\r\n" +
+	 "where\r\n" +
+	 "uzmtfinan_id = (select max(uzmtfinan_id) from utic.uzmtfinan)";
+	 System.out.println(q);
+	 return jdbcTemplate.query(q, new BeanPropertyRowMapper<>(PMovilidad.class));
+	 }
+
+
+	
+	
+	
+	@GetMapping("/SolicitudMov")
+	public List<PlanMovilidadVo> planmovilidadq() throws SQLException{
+		String q = "insert into utic.uzmtsolictmov (uzmtsolictmov_estado, uzmtsolictmov_fech, uzmtsolictmov_pidm) values\r\n" + 
+				"(1, (select (SELECT TO_CHAR(SYSDATE) FROM DUAL) as fecha from dual), (select peaempl_pidm from utic.uzmtverireq where uzmtverireq_id=(select max(uzmtverireq_id) from utic.uzmtverireq)))";
+	System.out.println(q);
+		return jdbcTemplate.query(q, new BeanPropertyRowMapper<>(PlanMovilidadVo.class));
+	}
+	
+	
 	@GetMapping("/escalafon/{id}")
 	public List<Escalafonados> findbyPIDM2(@PathVariable Long id) throws SQLException{
 		String q = "(SELECT DISTINCT\r\n" + 
@@ -175,127 +233,164 @@ public class añosController {
 		return (List<ReqplanmVo>) jdbcTemplate.query(q, new BeanPropertyRowMapper<>(ReqplanmVo.class));
 	}
 	
-	
 	@GetMapping("/requisito/{id}")
 	public List<ReqplanmVo> requisito(@PathVariable Long id) throws SQLException{
-		String q = "INSERT \r\n" + 
-				"WHEN \r\n" + 
-				"(SELECT TRUNC((( SYSDATE - PEBEMPL_FIRST_HIRE_DATE )/365),0) AS \r\n" + 
-				"TOTAL FROM PEBEMPL WHERE PEBEMPL_PIDM = "+ id +" AND PEBEMPL_BCAT_CODE = 'DO') >= 3\r\n" + 
-				"THEN\r\n" + 
-				"into utic.uzmtverireq ( uzmtreqplanm_id, PEAEMPL_PIDM, utic.uzmtverireq.uzmtverireq_estado,  uzmtverireq.uzmtverireq_fecha_crea) VALUES (3, "+ id +" ,1, "
-						+ "(select (SELECT TO_CHAR(SYSDATE) FROM DUAL) as fecha from dual))\r\n" + 
-				"WHEN\r\n" + 
-				"(SELECT TRUNC((( SYSDATE - PEBEMPL_FIRST_HIRE_DATE )/365),0) AS \r\n" + 
-				"TOTAL FROM PEBEMPL WHERE PEBEMPL_PIDM = "+ id +" AND PEBEMPL_BCAT_CODE = 'DO') < 3\r\n" + 
-				"THEN\r\n" + 
-				"into utic.uzmtverireq ( uzmtreqplanm_id, PEAEMPL_PIDM, utic.uzmtverireq.uzmtverireq_estado,  uzmtverireq.uzmtverireq_fecha_crea) VALUES (3, "+ id +" , 0, "
-						+ "(select (SELECT TO_CHAR(SYSDATE) FROM DUAL) as fecha from dual))\r\n" + 
-				"WHEN\r\n" + 
-				"(SELECT DISTINCT (select max(ptrtenr_desc)  from PTRTENR where ptrtenr_code= PERAPPT_TENURE_CODE ) as CATEGORIA_ESCALAFON FROM PEBEMPL , PERAPPT WHERE pebempl_PIDM = PERAPPT.PERAPPT_PIDM\r\n" + 
-				"AND pebempl_empl_status = 'A' AND (pebempl_bcat_code = 'DO' ) AND pebempl_PIDM ="+ id +" AND (pebempl_bcat_code = 'DO' or pebempl_bcat_code = 'SP' ) AND\r\n" + 
-				"pebempl_empl_status = (SELECT MAX(NBRJOBS_STATUS) FROM NBRJOBS where NBRJOBS_pidm = pebempl_PIDM  AND (nbrjobs_pict_code = 'ED' or nbrjobs_pict_code = 'LD' )  AND nbrjobs_effective_date = (SELECT MAX(nbrjobs_effective_date) \r\n" + 
-				"FROM NBRJOBS where NBRJOBS_pidm = pebempl_PIDM AND   (nbrjobs_pict_code = 'ED' or nbrjobs_pict_code = 'LD' ))) AND PERAPPT_APPT_EFF_DATE = (select MAX(PERAPPT_APPT_EFF_DATE)  from PERAPPT WHERE PERAPPT_PIDM = "+ id +")\r\n" + 
-				") LIKE 'TITULAR%'\r\n" + 
-				"THEN\r\n" + 
-				"into utic.uzmtverireq ( uzmtreqplanm_id, PEAEMPL_PIDM, utic.uzmtverireq.uzmtverireq_estado,  uzmtverireq.uzmtverireq_fecha_crea) VALUES (1, "+ id +", 1, "
-						+ "(select (SELECT TO_CHAR(SYSDATE) FROM DUAL) as fecha from dual))\r\n" + 
-				"WHEN\r\n" + 
-				"(SELECT DISTINCT (select max(ptrtenr_desc)  from PTRTENR where ptrtenr_code= PERAPPT_TENURE_CODE ) as CATEGORIA_ESCALAFON FROM PEBEMPL , PERAPPT WHERE pebempl_PIDM = PERAPPT.PERAPPT_PIDM\r\n" + 
-				"AND pebempl_empl_status = 'A' AND (pebempl_bcat_code = 'DO' ) AND pebempl_PIDM = "+ id +" AND (pebempl_bcat_code = 'DO' or pebempl_bcat_code = 'SP' ) AND\r\n" + 
-				"pebempl_empl_status = (SELECT MAX(NBRJOBS_STATUS) FROM NBRJOBS where NBRJOBS_pidm = pebempl_PIDM  AND (nbrjobs_pict_code = 'ED' or nbrjobs_pict_code = 'LD' )  AND nbrjobs_effective_date = (SELECT MAX(nbrjobs_effective_date) \r\n" + 
-				"FROM NBRJOBS where NBRJOBS_pidm = pebempl_PIDM AND   (nbrjobs_pict_code = 'ED' or nbrjobs_pict_code = 'LD' ))) AND PERAPPT_APPT_EFF_DATE = (select MAX(PERAPPT_APPT_EFF_DATE)  from PERAPPT WHERE PERAPPT_PIDM = "+ id +")\r\n" + 
-				") NOT LIKE 'TITULAR%'\r\n" + 
-				"THEN\r\n" + 
-				"into utic.uzmtverireq ( uzmtreqplanm_id, PEAEMPL_PIDM, utic.uzmtverireq.uzmtverireq_estado,  uzmtverireq.uzmtverireq_fecha_crea) VALUES (1,"+ id +" , 0, "
-						+ "(select (SELECT TO_CHAR(SYSDATE) FROM DUAL) as fecha from dual))\r\n" + 
-				"WHEN \r\n" + 
-				"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" + 
-				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D04','S04') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") >= 2 OR\r\n" + 
-				"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" + 
-				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D05','S05') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") >= 1 OR\r\n" + 
-				"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" + 
-				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D06','S06') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") >= 1 OR\r\n" + 
-				"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" + 
-				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D08') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") >= 1 OR\r\n" + 
-				"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" + 
-				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D09') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") >= 1 OR\r\n" + 
-				"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" + 
-				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D010') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") >= 1 OR\r\n" + 
-				"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" + 
-				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D011') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") >= 1 OR\r\n" + 
-				"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" + 
-				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D012') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") >= 1\r\n" + 
-				"THEN\r\n" + 
-				"into utic.uzmtverireq ( uzmtreqplanm_id, PEAEMPL_PIDM, utic.uzmtverireq.uzmtverireq_estado,  uzmtverireq.uzmtverireq_fecha_crea) VALUES (4, "+ id +", 0, "
-						+ "(select (SELECT TO_CHAR(SYSDATE) FROM DUAL) as fecha from dual))\r\n" + 
-				" WHEN \r\n" + 
-				"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" + 
-				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D04','S04') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") < 2 AND\r\n" + 
-				"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" + 
-				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D05','S05') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") < 2 AND\r\n" + 
-				"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" + 
-				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D06','S06') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") < 2 AND\r\n" + 
-				"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" + 
-				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D08') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") < 2  AND\r\n" + 
-				"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" + 
-				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D09') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") < 2 AND\r\n" + 
-				"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" + 
-				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D010') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") < 2 AND\r\n" + 
-				"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" + 
-				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D011') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") < 2 AND\r\n" + 
-				"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" + 
-				"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D012') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") < 2\r\n" + 
-				"THEN\r\n" + 
-				"into utic.uzmtverireq ( uzmtreqplanm_id, PEAEMPL_PIDM, utic.uzmtverireq.uzmtverireq_estado,  uzmtverireq.uzmtverireq_fecha_crea) VALUES (4, "+ id +", 1, "
-						+ "(select (SELECT TO_CHAR(SYSDATE) FROM DUAL) as fecha from dual))" + 
-				
-				"SELECT * FROM DUAL\r\n" + 
-				"";
+	String q = "INSERT \r\n" +
+	"WHEN \r\n" +
+	"(SELECT TRUNC((( SYSDATE - PEBEMPL_FIRST_HIRE_DATE )/365),0) AS \r\n" +
+	"TOTAL FROM PEBEMPL WHERE PEBEMPL_PIDM = "+ id +" AND PEBEMPL_BCAT_CODE = 'DO') >= 3\r\n" +
+	"THEN\r\n" +
+	"into utic.uzmtverireq ( uzmtreqplanm_id, PEAEMPL_PIDM, utic.uzmtverireq.uzmtverireq_estado,  uzmtverireq.uzmtverireq_fecha_crea) VALUES (3, "+ id +" ,1, "
+	+ "(select (SELECT TO_CHAR(SYSDATE) FROM DUAL) as fecha from dual))\r\n" +
+	"WHEN\r\n" +
+	"(SELECT TRUNC((( SYSDATE - PEBEMPL_FIRST_HIRE_DATE )/365),0) AS \r\n" +
+	"TOTAL FROM PEBEMPL WHERE PEBEMPL_PIDM = "+ id +" AND PEBEMPL_BCAT_CODE = 'DO') < 3\r\n" +
+	"THEN\r\n" +
+	"into utic.uzmtverireq ( uzmtreqplanm_id, PEAEMPL_PIDM, utic.uzmtverireq.uzmtverireq_estado,  uzmtverireq.uzmtverireq_fecha_crea) VALUES (3, "+ id +" , 0, "
+	+ "(select (SELECT TO_CHAR(SYSDATE) FROM DUAL) as fecha from dual))\r\n" +
+	"WHEN\r\n" +
+	"(SELECT DISTINCT (select max(ptrtenr_desc)  from PTRTENR where ptrtenr_code= PERAPPT_TENURE_CODE ) as CATEGORIA_ESCALAFON FROM PEBEMPL , PERAPPT WHERE pebempl_PIDM = PERAPPT.PERAPPT_PIDM\r\n" +
+	"AND pebempl_empl_status = 'A' AND (pebempl_bcat_code = 'DO' ) AND pebempl_PIDM ="+ id +" AND (pebempl_bcat_code = 'DO' or pebempl_bcat_code = 'SP' ) AND\r\n" +
+	"pebempl_empl_status = (SELECT MAX(NBRJOBS_STATUS) FROM NBRJOBS where NBRJOBS_pidm = pebempl_PIDM  AND (nbrjobs_pict_code = 'ED' or nbrjobs_pict_code = 'LD' )  AND nbrjobs_effective_date = (SELECT MAX(nbrjobs_effective_date) \r\n" +
+	"FROM NBRJOBS where NBRJOBS_pidm = pebempl_PIDM AND   (nbrjobs_pict_code = 'ED' or nbrjobs_pict_code = 'LD' ))) AND PERAPPT_APPT_EFF_DATE = (select MAX(PERAPPT_APPT_EFF_DATE)  from PERAPPT WHERE PERAPPT_PIDM = "+ id +")\r\n" +
+	") LIKE 'TITULAR%'\r\n" +
+	"THEN\r\n" +
+	"into utic.uzmtverireq ( uzmtreqplanm_id, PEAEMPL_PIDM, utic.uzmtverireq.uzmtverireq_estado,  uzmtverireq.uzmtverireq_fecha_crea) VALUES (1, "+ id +", 1, "
+	+ "(select (SELECT TO_CHAR(SYSDATE) FROM DUAL) as fecha from dual))\r\n" +
+	"WHEN\r\n" +
+	"(SELECT DISTINCT (select max(ptrtenr_desc)  from PTRTENR where ptrtenr_code= PERAPPT_TENURE_CODE ) as CATEGORIA_ESCALAFON FROM PEBEMPL , PERAPPT WHERE pebempl_PIDM = PERAPPT.PERAPPT_PIDM\r\n" +
+	"AND pebempl_empl_status = 'A' AND (pebempl_bcat_code = 'DO' ) AND pebempl_PIDM = "+ id +" AND (pebempl_bcat_code = 'DO' or pebempl_bcat_code = 'SP' ) AND\r\n" +
+	"pebempl_empl_status = (SELECT MAX(NBRJOBS_STATUS) FROM NBRJOBS where NBRJOBS_pidm = pebempl_PIDM  AND (nbrjobs_pict_code = 'ED' or nbrjobs_pict_code = 'LD' )  AND nbrjobs_effective_date = (SELECT MAX(nbrjobs_effective_date) \r\n" +
+	"FROM NBRJOBS where NBRJOBS_pidm = pebempl_PIDM AND   (nbrjobs_pict_code = 'ED' or nbrjobs_pict_code = 'LD' ))) AND PERAPPT_APPT_EFF_DATE = (select MAX(PERAPPT_APPT_EFF_DATE)  from PERAPPT WHERE PERAPPT_PIDM = "+ id +")\r\n" +
+	") NOT LIKE 'TITULAR%'\r\n" +
+	"THEN\r\n" +
+	"into utic.uzmtverireq ( uzmtreqplanm_id, PEAEMPL_PIDM, utic.uzmtverireq.uzmtverireq_estado,  uzmtverireq.uzmtverireq_fecha_crea) VALUES (1,"+ id +" , 0, "
+	+ "(select (SELECT TO_CHAR(SYSDATE) FROM DUAL) as fecha from dual))\r\n" +
+	"WHEN \r\n" +
+	"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" +
+	"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D04','S04') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") >= 2 OR\r\n" +
+	"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" +
+	"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D05','S05') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") > 0 OR\r\n" +
+	"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" +
+	"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D06','S06') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") > 0 OR\r\n" +
+	"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" +
+	"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D08') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") > 0 OR\r\n" +
+	"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" +
+	"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D09') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") > 0 OR\r\n" +
+	"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" +
+	"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D010') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") > 0 OR\r\n" +
+	"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" +
+	"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D011') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") > 0 OR\r\n" +
+	"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" +
+	"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D012') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") > 0\r\n" +
+	"THEN\r\n" +
+	"into utic.uzmtverireq ( uzmtreqplanm_id, PEAEMPL_PIDM, utic.uzmtverireq.uzmtverireq_estado,  uzmtverireq.uzmtverireq_fecha_crea) VALUES (4, "+ id +", 0, "
+	+ "(select (SELECT TO_CHAR(SYSDATE) FROM DUAL) as fecha from dual))\r\n" +
+	" WHEN \r\n" +
+	"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" +
+	"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D04','S04') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") < 2 AND\r\n" +
+	"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" +
+	"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D05','S05') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") < 0 AND\r\n" +
+	"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" +
+	"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D06','S06') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") < 0 AND\r\n" +
+	"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" +
+	"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D08') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") < 0  AND\r\n" +
+	"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" +
+	"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D09') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") < 0 AND\r\n" +
+	"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" +
+	"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D010') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") < 0 AND\r\n" +
+	"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" +
+	"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D011') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") < 0 AND\r\n" +
+	"(select COUNT (*) AS REINCIDENCIAS from PPRCCMT CROSS JOIN PTVCMTY where\r\n" +
+	"PTVCMTY.PTVCMTY_CODE = pprccmt.pprccmt_cmty_code AND PPRCCMT_CMTY_CODE IN ('D012') AND  PPRCCMT.PPRCCMT_PIDM = "+ id +") < 0\r\n" +
+	"THEN\r\n" +
+	"into utic.uzmtverireq ( uzmtreqplanm_id, PEAEMPL_PIDM, utic.uzmtverireq.uzmtverireq_estado,  uzmtverireq.uzmtverireq_fecha_crea) VALUES (4, "+ id +", 1, "
+	 + "(select (SELECT TO_CHAR(SYSDATE) FROM DUAL) as fecha from dual))" +
+	"when (select uzmtestinter_pidm from utic.uzmtestinter where uzmtestinter_pidm = "+ id +" and rownum = 1) = "+ id +"\r\n" +
+	"then into utic.uzmtverireq ( uzmtreqplanm_id, PEAEMPL_PIDM, utic.uzmtverireq.uzmtverireq_estado) VALUES (2, "+ id +", 0)\r\n" +
+	"when (select uzmtestinter_pidm from utic.uzmtestinter where uzmtestinter_pidm = "+ id +" and rownum = 1) IS NULL\r\n" +
+	"then into utic.uzmtverireq ( uzmtreqplanm_id, PEAEMPL_PIDM, utic.uzmtverireq.uzmtverireq_estado) VALUES (2, "+ id +", 1)\r\n" +
+	"SELECT * FROM DUAL";
+
 	System.out.println(q);
-		return (List<ReqplanmVo>) jdbcTemplate.query(q, new BeanPropertyRowMapper<>(ReqplanmVo.class));
+	return (List<ReqplanmVo>) jdbcTemplate.query(q, new BeanPropertyRowMapper<>(ReqplanmVo.class));
 	}
+	
 	
 	@GetMapping("/mostrarRequisitos/{id}")
 	public List<verificacionvo> find(@PathVariable Long id) throws SQLException{
-		String q ="select  DISTINCT(uzmtrequisito_detalle) as nombre, uzmtverireq_estado, uzmtverireq_id, utic.uzmtreqplanm.uzmtreqplanm_id\r\n" + 
-				"from utic.uzmtverireq,utic.uzmtrequisito,utic.uzmtreqplanm where utic.uzmtverireq.uzmtreqplanm_id= utic.uzmtreqplanm.uzmtreqplanm_id \r\n" + 
+		String q ="select  utic.uzmtrequisito.uzmtrequisito_detalle as nombre, uzmtverireq_estado from utic.uzmtverireq,utic.uzmtrequisito,utic.uzmtreqplanm where utic.uzmtverireq.uzmtreqplanm_id= utic.uzmtreqplanm.uzmtreqplanm_id \r\n" + 
 				"and utic.uzmtrequisito.uzmtrequisito_id= utic.uzmtreqplanm.uzmtrequisito_id \r\n" + 
-				"and peaempl_pidm = " +id+ " and utic.uzmtverireq.uzmtreqplanm_id = 1 and rownum = 1\r\n" + 
-				"and uzmtverireq_id = (select uzmtverireq_id from utic.uzmtverireq where peaempl_pidm = " +id+ " and uzmtreqplanm_id = 1 \r\n" + 
-				"and uzmtverireq_id = (select max (UZMTVERIREQ_ID) from UZMTVERIREQ where peaempl_pidm = " +id+ " and uzmtreqplanm_id = 1))\r\n" + 
+				"and peaempl_pidm = "+ id +" and   uzmtverireq_id = (select max(uzmtverireq_id) from utic.uzmtverireq where uzmtreqplanm_id = 1 and peaempl_pidm = "+ id +")\r\n" + 
+				"union\r\n" + 
+				"select  utic.uzmtrequisito.uzmtrequisito_detalle as nombre, uzmtverireq_estado from utic.uzmtverireq,utic.uzmtrequisito,utic.uzmtreqplanm where utic.uzmtverireq.uzmtreqplanm_id= utic.uzmtreqplanm.uzmtreqplanm_id \r\n" + 
+				"and utic.uzmtrequisito.uzmtrequisito_id= utic.uzmtreqplanm.uzmtrequisito_id \r\n" + 
+				"and peaempl_pidm = "+ id +" and   uzmtverireq_id = (select max(uzmtverireq_id) from utic.uzmtverireq where uzmtreqplanm_id = 2 and peaempl_pidm = "+ id +")\r\n" + 
+				"union\r\n" + 
+				"select  utic.uzmtrequisito.uzmtrequisito_detalle as nombre, uzmtverireq_estado from utic.uzmtverireq,utic.uzmtrequisito,utic.uzmtreqplanm where utic.uzmtverireq.uzmtreqplanm_id= utic.uzmtreqplanm.uzmtreqplanm_id \r\n" + 
+				"and utic.uzmtrequisito.uzmtrequisito_id= utic.uzmtreqplanm.uzmtrequisito_id \r\n" + 
+				"and peaempl_pidm = "+ id +" and   uzmtverireq_id = (select max(uzmtverireq_id) from utic.uzmtverireq where uzmtreqplanm_id = 3 and peaempl_pidm = "+ id +")\r\n" + 
+				"union\r\n" + 
+				"select  utic.uzmtrequisito.uzmtrequisito_detalle as nombre, uzmtverireq_estado from utic.uzmtverireq,utic.uzmtrequisito,utic.uzmtreqplanm where utic.uzmtverireq.uzmtreqplanm_id= utic.uzmtreqplanm.uzmtreqplanm_id \r\n" + 
+				"and utic.uzmtrequisito.uzmtrequisito_id= utic.uzmtreqplanm.uzmtrequisito_id \r\n" + 
+				"and peaempl_pidm = "+ id +" and   uzmtverireq_id = (select max(uzmtverireq_id) from utic.uzmtverireq where uzmtreqplanm_id = 4 and peaempl_pidm = "+ id +")\r\n" + 
 				"\r\n" + 
-				"UNION\r\n" + 
-				"\r\n" + 
-				"select  DISTINCT(uzmtrequisito_detalle) as nombre, uzmtverireq_estado, uzmtverireq_id, utic.uzmtreqplanm.uzmtreqplanm_id\r\n" + 
-				"from utic.uzmtverireq,utic.uzmtrequisito,utic.uzmtreqplanm where utic.uzmtverireq.uzmtreqplanm_id= utic.uzmtreqplanm.uzmtreqplanm_id \r\n" + 
-				"and utic.uzmtrequisito.uzmtrequisito_id= utic.uzmtreqplanm.uzmtrequisito_id\r\n" + 
-				"and peaempl_pidm = " +id+ " and utic.uzmtverireq.uzmtreqplanm_id = 2 and rownum = 1 \r\n" + 
-				"and uzmtverireq_id = (select uzmtverireq_id from utic.uzmtverireq where peaempl_pidm = " +id+ " and uzmtreqplanm_id = 2 \r\n" + 
-				"and uzmtverireq_id = (select max (UZMTVERIREQ_ID) from UZMTVERIREQ where peaempl_pidm = " +id+ " and uzmtreqplanm_id = 2))\r\n" + 
-				"\r\n" + 
-				"UNION\r\n" + 
-				"\r\n" + 
-				"select  DISTINCT(uzmtrequisito_detalle) as nombre, uzmtverireq_estado, uzmtverireq_id, utic.uzmtreqplanm.uzmtreqplanm_id\r\n" + 
-				"from utic.uzmtverireq,utic.uzmtrequisito,utic.uzmtreqplanm where utic.uzmtverireq.uzmtreqplanm_id= utic.uzmtreqplanm.uzmtreqplanm_id \r\n" + 
-				"and utic.uzmtrequisito.uzmtrequisito_id= utic.uzmtreqplanm.uzmtrequisito_id\r\n" + 
-				"and peaempl_pidm = " +id+ " and utic.uzmtverireq.uzmtreqplanm_id = 3 and rownum = 1\r\n" + 
-				"and uzmtverireq_id = (select uzmtverireq_id from utic.uzmtverireq where peaempl_pidm = " +id+ " and uzmtreqplanm_id = 3 \r\n" + 
-				"and uzmtverireq_id = (select max (UZMTVERIREQ_ID) from UZMTVERIREQ where peaempl_pidm = " +id+ " and uzmtreqplanm_id = 3))\r\n" + 
-				"\r\n" + 
-				"UNION\r\n" + 
-				"\r\n" + 
-				"select  DISTINCT(uzmtrequisito_detalle) as nombre, uzmtverireq_estado, uzmtverireq_id, utic.uzmtreqplanm.uzmtreqplanm_id\r\n" + 
-				"from utic.uzmtverireq,utic.uzmtrequisito,utic.uzmtreqplanm where utic.uzmtverireq.uzmtreqplanm_id= utic.uzmtreqplanm.uzmtreqplanm_id \r\n" + 
-				"and utic.uzmtrequisito.uzmtrequisito_id= utic.uzmtreqplanm.uzmtrequisito_id\r\n" + 
-				"and peaempl_pidm = " +id+ " and utic.uzmtverireq.uzmtreqplanm_id = 4 and rownum = 1\r\n" + 
-				"and uzmtverireq_id = (select uzmtverireq_id from utic.uzmtverireq where peaempl_pidm = " +id+ " and uzmtreqplanm_id = 4 \r\n" + 
-				"and uzmtverireq_id = (select max (UZMTVERIREQ_ID) from UZMTVERIREQ where peaempl_pidm = " +id+ " and uzmtreqplanm_id = 4))\r\n" + 
-				"\r\n" + 
-				"order by uzmtreqplanm_id asc";
+				"";
 	System.out.println(q);
 		return jdbcTemplate.query(q, new BeanPropertyRowMapper<>(verificacionvo.class));
 	}
+
+	@GetMapping("/RequisitoExterno/{id}")
+	public List<Escalafonados> findbyPIDM3(@PathVariable Long id) throws SQLException{
+	String q = "insert when \r\n" +
+	"(select uzmtconvenio_fech_ini from utic.uzmtconvenio\r\n" +
+	"where uzmtconvenio_id = (select max(uzmtconvenio_id) from utic.uzmtconvenio)) < =\r\n" +
+	"(select (SELECT TO_CHAR(SYSDATE) FROM DUAL) as fecha from dual) and \r\n" +
+	"(select uzmtconvenio_fech_fin from utic.uzmtconvenio\r\n" +
+	"where uzmtconvenio_id = (select max(uzmtconvenio_id) from utic.uzmtconvenio)) > = \r\n" +
+	"(select (SELECT TO_CHAR(SYSDATE) FROM DUAL) as fecha from dual)\r\n" +
+	"then into  utic.uzmtverireq ( uzmtreqplanm_id, PEAEMPL_PIDM, utic.uzmtverireq.uzmtverireq_estado) VALUES (5, " + id + ", 1)\r\n" +
+	" when \r\n" +
+	"(select uzmtconvenio_fech_ini from utic.uzmtconvenio\r\n" +
+	"where uzmtconvenio_id = (select max(uzmtconvenio_id) from utic.uzmtconvenio)) > =\r\n" +
+	"(select (SELECT TO_CHAR(SYSDATE) FROM DUAL) as fecha from dual) or\r\n" +
+	"(select uzmtconvenio_fech_fin from utic.uzmtconvenio\r\n" +
+	"where uzmtconvenio_id = (select max(uzmtconvenio_id) from utic.uzmtconvenio)) < = \r\n" +
+	"(select (SELECT TO_CHAR(SYSDATE) FROM DUAL) as fecha from dual)\r\n" +
+	"\r\n" +
+	"then into  utic.uzmtverireq ( uzmtreqplanm_id, PEAEMPL_PIDM, utic.uzmtverireq.uzmtverireq_estado) VALUES (5, " + id + ", 0)\r\n" +
+	"select * from dual";
+	System.out.println(q);
+	return jdbcTemplate.query(q, new BeanPropertyRowMapper<>(Escalafonados.class));
+	}
+	
+	
+	 @GetMapping("/mostrarRequisitosExterno/{id}")
+	 public List<verificacionvo> findu(@PathVariable Long id) throws SQLException{
+	 String q ="select  DISTINCT(uzmtrequisito_detalle) as nombre, uzmtverireq_estado\r\n" +
+	 "from utic.uzmtverireq,utic.uzmtrequisito,utic.uzmtreqplanm where utic.uzmtverireq.uzmtreqplanm_id= utic.uzmtreqplanm.uzmtreqplanm_id \r\n" +
+	 "and utic.uzmtrequisito.uzmtrequisito_id= utic.uzmtreqplanm.uzmtrequisito_id and uzmtverireq_id = (select max(uzmtverireq_id) \r\n" +
+	 "from utic.uzmtverireq where uzmtreqplanm_id = 5 and peaempl_pidm =  "+ id +")\r\n" +
+	 "and peaempl_pidm =  "+ id +"";
+	 System.out.println(q);
+	 return jdbcTemplate.query(q, new BeanPropertyRowMapper<>(verificacionvo.class));
+	 }
+
+	
+	 
+	 @GetMapping("/updateTotal")
+	 public List<PMovilidad> findPMn() throws SQLException{
+	 String q = "update\r\n" +
+	 "uzmtfinan\r\n" +
+	 "set \r\n" +
+	 "uzmtfinan_total = (select sum(uzmtfinan_pasaje + uzmtfinan_viatico + uzmtfinan_otros) as total from utic.uzmtfinan \r\n" +
+	 "where uzmtfinan_id = (select max(uzmtfinan_id) from utic.uzmtfinan))\r\n" +
+	 "where\r\n" +
+	 "uzmtfinan_id = (select max(uzmtfinan_id) from utic.uzmtfinan)";
+	 System.out.println(q);
+	 return jdbcTemplate.query(q, new BeanPropertyRowMapper<>(PMovilidad.class));
+	 }
+	
 	
 	@GetMapping("/requisitomovsubm/{id}")
 	public List<ReqmovsubmVo> requisitomovssubm(@PathVariable Long id) throws SQLException{
@@ -383,6 +478,7 @@ public class añosController {
 	System.out.println(q);
 		return (List<ReqmovsubmVo>) jdbcTemplate.query(q, new BeanPropertyRowMapper<>(ReqmovsubmVo.class));
 	}
+	
 	@GetMapping("/reqmov1/{id}")
 	public List<ReqmovsubmVo> requisitomov(@PathVariable Long id) throws SQLException{
 		String q = "insert into utic.uzmtverireq(uzmtverireq_id, uzmtreqmovsubm_id, PEAEMPL_PIDM, uzmtverireq_estado)\r\n" + 
