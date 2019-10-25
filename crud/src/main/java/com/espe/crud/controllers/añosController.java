@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.espe.crud.model.Años;
+import com.espe.crud.model.AÃ±os;
 import com.espe.crud.model.Detalles;
 import com.espe.crud.model.Sanciones;
 import com.espe.crud.model.Escalafonados;
@@ -31,18 +31,18 @@ import com.espe.crud.vo.verificacionvo;
 
 @CrossOrigin(origins = "*")
 @RestController 
-public class añosController {
+public class aÃ±osController {
 
-    public static final Logger logger= LoggerFactory.getLogger(añosController.class);
+    public static final Logger logger= LoggerFactory.getLogger(aÃ±osController.class);
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
 	
-	@GetMapping("/años/{id}")
-	public List<Años> findbyPIDM(@PathVariable Long id) throws SQLException{
+	@GetMapping("/aÃ±os/{id}")
+	public List<AÃ±os> findbyPIDM(@PathVariable Long id) throws SQLException{
 		String q = "SELECT TRUNC((( SYSDATE - PEBEMPL_FIRST_HIRE_DATE )/365),0) AS TOTAL FROM PEBEMPL WHERE PEBEMPL_PIDM = " + id +" AND PEBEMPL_BCAT_CODE = 'DO'";
 	System.out.println(q);
-		return jdbcTemplate.query(q, new BeanPropertyRowMapper<>(Años.class));
+		return jdbcTemplate.query(q, new BeanPropertyRowMapper<>(AÃ±os.class));
 	}
 	
 	@GetMapping("/pmov")
@@ -213,8 +213,8 @@ public class añosController {
 	
 	
 	
-	@GetMapping("/requisitoAños/{id}")
-	public List<ReqplanmVo> requisitosAños(@PathVariable Long id) throws SQLException{
+	@GetMapping("/requisitoAÃ±os/{id}")
+	public List<ReqplanmVo> requisitosAÃ±os(@PathVariable Long id) throws SQLException{
 		String q = "INSERT INTO utic.uzmtverireq( uzmtreqplanm_id, PEAEMPL_PIDM,uzmtverireq_estado)\n" + 
 				"( SELECT 3,PEBEMPL_PIDM,1  FROM PEBEMPL WHERE  PEBEMPL_PIDM ="+id+" AND PEBEMPL_BCAT_CODE = 'DO' AND \n" + 
 				"(SELECT TRUNC((( SYSDATE - PEBEMPL_FIRST_HIRE_DATE )/365),0) FROM PEBEMPL WHERE PEBEMPL_PIDM ="+id+" AND PEBEMPL_BCAT_CODE = 'DO') > 3)";
@@ -226,8 +226,8 @@ public class añosController {
 	
 	
 	
-	@GetMapping("/requisitoAños2/{id}")
-	public List<ReqplanmVo> requisitoAños2(@PathVariable Long id) throws SQLException{
+	@GetMapping("/requisitoAÃ±os2/{id}")
+	public List<ReqplanmVo> requisitoAÃ±os2(@PathVariable Long id) throws SQLException{
 		String q = "insert into utic.uzmtverireq(uzmtreqplanm_id, PEAEMPL_PIDM, uzmtverireq_estado)\r\n" + 
 				"select 3,"+ id +",0 from dual where not exists (select uzmtreqplanm_id, PEAEMPL_PIDM, uzmtverireq_estado from utic.uzmtverireq where\r\n" + 
 				"(uzmtverireq_estado= 1 and uzmtreqplanm_id= 3 and peaempl_pidm= "+ id +"))";
@@ -343,28 +343,30 @@ public class añosController {
 	}
 
 	@GetMapping("/RequisitoExterno/{id}")
-	public List<Escalafonados> findbyPIDM3(@PathVariable Long id) throws SQLException{
+	public List<Escalafonados> findbyPIDMxd(@PathVariable Long id) throws SQLException{
 	String q = "insert when \r\n" +
-	"(select uzmtconvenio_fech_ini from utic.uzmtconvenio\r\n" +
-	"where uzmtconvenio_id = (select max(uzmtconvenio_id) from utic.uzmtconvenio)) < =\r\n" +
-	"(select (SELECT TO_CHAR(SYSDATE) FROM DUAL) as fecha from dual) and \r\n" +
+	"(select (SELECT TO_CHAR(SYSDATE) FROM DUAL) as fecha from dual) < =\r\n" +
 	"(select uzmtconvenio_fech_fin from utic.uzmtconvenio\r\n" +
-	"where uzmtconvenio_id = (select max(uzmtconvenio_id) from utic.uzmtconvenio)) > = \r\n" +
-	"(select (SELECT TO_CHAR(SYSDATE) FROM DUAL) as fecha from dual)\r\n" +
+	"where uzmtconvenio_id = (select max(uzmtconvenio_id) from utic.uzmtconvenio))\r\n" +
+	"and \r\n" +
+	"(select (SELECT TO_CHAR(SYSDATE) FROM DUAL) as fecha from dual)>= \r\n" +
+	"(select uzmtconvenio_fech_ini from utic.uzmtconvenio\r\n" +
+	"where uzmtconvenio_id = (select max(uzmtconvenio_id) from utic.uzmtconvenio))\r\n" +
 	"then into  utic.uzmtverireq ( uzmtreqplanm_id, PEAEMPL_PIDM, utic.uzmtverireq.uzmtverireq_estado) VALUES (5, " + id + ", 1)\r\n" +
-	" when \r\n" +
-	"(select uzmtconvenio_fech_ini from utic.uzmtconvenio\r\n" +
-	"where uzmtconvenio_id = (select max(uzmtconvenio_id) from utic.uzmtconvenio)) > =\r\n" +
-	"(select (SELECT TO_CHAR(SYSDATE) FROM DUAL) as fecha from dual) or\r\n" +
+	"when \r\n" +
+	"(select (SELECT TO_CHAR(SYSDATE) FROM DUAL) as fecha from dual) >\r\n" +
 	"(select uzmtconvenio_fech_fin from utic.uzmtconvenio\r\n" +
-	"where uzmtconvenio_id = (select max(uzmtconvenio_id) from utic.uzmtconvenio)) < = \r\n" +
-	"(select (SELECT TO_CHAR(SYSDATE) FROM DUAL) as fecha from dual)\r\n" +
-	"\r\n" +
+	"where uzmtconvenio_id = (select max(uzmtconvenio_id) from utic.uzmtconvenio)) \r\n" +
+	"or \r\n" +
+	"(select (SELECT TO_CHAR(SYSDATE) FROM DUAL) as fecha from dual)< \r\n" +
+	"(select uzmtconvenio_fech_ini from utic.uzmtconvenio\r\n" +
+	"where uzmtconvenio_id = (select max(uzmtconvenio_id) from utic.uzmtconvenio))\r\n" +
 	"then into  utic.uzmtverireq ( uzmtreqplanm_id, PEAEMPL_PIDM, utic.uzmtverireq.uzmtverireq_estado) VALUES (5, " + id + ", 0)\r\n" +
 	"select * from dual";
 	System.out.println(q);
 	return jdbcTemplate.query(q, new BeanPropertyRowMapper<>(Escalafonados.class));
 	}
+
 	
 	
 	 @GetMapping("/mostrarRequisitosExterno/{id}")
@@ -394,6 +396,34 @@ public class añosController {
 	 }
 	
 	
+	 
+	 @GetMapping("/requisitosMovilidad/{id}")
+	 public List<ReqplanmVo> requisitoMovilidad(@PathVariable Long id) throws SQLException{
+	 String q = "insert when\r\n" +
+	 "(select COUNT(*) from utic.uzmtestinter where uzmtestinter_pidm = "+ id +") > = 2\r\n" +
+	 "Then into utic.uzmtverireq ( uzmtreqplanm_id, PEAEMPL_PIDM, utic.uzmtverireq.uzmtverireq_estado, uzmtverireq.uzmtverireq_fecha_crea)\r\n" +
+	 "VALUES (6, "+ id +", 0, (select (SELECT TO_CHAR(SYSDATE) FROM DUAL) as fecha from dual))\r\n" +
+	 "WHEN \r\n" +
+	 "(select COUNT(*) from utic.uzmtestinter where uzmtestinter_pidm = "+ id +") < 2\r\n" +
+	 "then into utic.uzmtverireq ( uzmtreqplanm_id, PEAEMPL_PIDM, utic.uzmtverireq.uzmtverireq_estado) VALUES (6, "+ id +", 1)\r\n" +
+	 "SELECT * FROM DUAL";
+	 System.out.println(q);
+	 return (List<ReqplanmVo>) jdbcTemplate.query(q, new BeanPropertyRowMapper<>(ReqplanmVo.class));
+	 }
+	 
+	 
+	 
+	 @GetMapping("/mostrarRequisitosMovilidad/{id}")
+	 public List<verificacionvo> findh(@PathVariable Long id) throws SQLException{
+	 String q ="select  utic.uzmtrequisito.uzmtrequisito_detalle as nombre, uzmtverireq_estado from utic.uzmtverireq,utic.uzmtrequisito,utic.uzmtreqplanm where utic.uzmtverireq.uzmtreqplanm_id= utic.uzmtreqplanm.uzmtreqplanm_id \r\n" +
+	 "and utic.uzmtrequisito.uzmtrequisito_id= utic.uzmtreqplanm.uzmtrequisito_id \r\n" +
+	 "and peaempl_pidm = "+ id +" and   uzmtverireq_id = (select max(uzmtverireq_id) from utic.uzmtverireq where uzmtreqplanm_id = 6 and peaempl_pidm = "+ id +")\r\n" +
+	 "";
+	 System.out.println(q);
+	 return jdbcTemplate.query(q, new BeanPropertyRowMapper<>(verificacionvo.class));
+	 }
+	 
+	 
 	@GetMapping("/requisitomovsubm/{id}")
 	public List<ReqmovsubmVo> requisitomovssubm(@PathVariable Long id) throws SQLException{
 		String q ="insert WHEN ((SELECT DISTINCT\r\n" + 
